@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"io"
 	"os"
 )
@@ -16,5 +17,5 @@ func Md5File(file string) (string, error) {
 	if _, err := io.Copy(hash, fp); err != nil {
 		return "", err
 	}
-	return string(hash.Sum(nil)), nil
+	return hex.EncodeToString(hash.Sum(nil)), nil
 }
