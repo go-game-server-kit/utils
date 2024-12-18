@@ -2,26 +2,24 @@ package utils
 
 import "sync"
 
-type Once[T any] struct {
-	once     *sync.Once
-	newer    func() T
-	instance T
+type Once struct {
+	once *sync.Once
+	fn   func()
 }
 
-func NewOnce[T any](newer func() T) *Once[T] {
-	if newer == nil {
-		panic("NewOnce:newer is nil")
+func NewOnce(fn func()) *Once {
+	if fn == nil {
+		panic("NewOnce:fn is nil")
 	}
-	once := &Once[T]{
-		once:  &sync.Once{},
-		newer: newer,
+	once := &Once{
+		once: &sync.Once{},
+		fn:   fn,
 	}
 	return once
 }
 
-func (o *Once[T]) Do() T {
+func (o *Once) Do() {
 	o.once.Do(func() {
-		o.instance = o.newer()
+		o.fn()
 	})
-	return o.instance
 }
